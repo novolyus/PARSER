@@ -106,55 +106,6 @@ def errors_found(liste):
 
 
 
-def send_mail_errors(multierror):
-    msg = MIMEMultipart()          
-    msg['From'] = "NST-Jenkins@DPKO.UN.ORG"
-    msg['To'] = ", ".join(recipients)
-    msg['Subject'] = "#AUTO|MAIN UPLINKS Preventive Maintenance routine to check all DC uplinks -  Report"
-    smtpServer = 'onesmtp.un.org'
-    if len(multierror) == 0:
-        message = '''
-             No errors found during checks. 
-             Have an excellent day!            
-             '''
-        msg.attach(MIMEText(message, 'plain'))
-        with open ('template_errors.html', "w") as f:
-            f.write('''<body>
-                       <b>List empty. No errors found</b>
-                       </body>''')
-            f.close          
-    else:
-         message = '''
-             Errors found (list of errors). 
-             '''
-         create_template(multierror,'template_errors.html')
-         msg.attach(MIMEText(message, 'plain')) 
-                       
-    msg = MIMEMultipart()          
-    msg['From'] = "NST-Jenkins@DPKO.UN.ORG"
-    msg['To'] = ", ".join(recipients)
-    msg['Subject'] = "#AUTO|MAIN UPLINKS Preventive Maintenance routine to check all DC uplinks -  Report"
-    smtpServer = 'onesmtp.un.org'
-    msg.attach(MIMEText(message, 'plain'))
-    
-    filename = 'template.html'
-    filename_errors = 'template_errors.html'
-    part = MIMEBase('application', "octet-stream")
-    part2 = MIMEBase('application', "octet-stream")
-    part.set_payload(open(filename, "rb").read())
-    part2.set_payload(open(filename_errors, "rb").read())
-    encoders.encode_base64(part)
-    encoders.encode_base64(part2)
-    part.add_header("Content-Disposition", f"attachment; filename = {filename}")
-    part2.add_header("Content-Disposition", f"attachment; filename = {filename_errors}")
-    msg.attach(part)
-    msg.attach(part2)
-    
-    server = smtplib.SMTP(smtpServer,25)
-    server.sendmail(msg['From'], recipients, msg.as_string())  
-    server.quit()
-    print ("successfully sent email to " + msg['To']) 
-    
 
 
 for device in devices:
@@ -174,13 +125,8 @@ for device in devices:
 create_template(liste_parsed, 'template.html') 
 
 defined_errors = errors_found(liste_parsed)
-if defined_errors == True:
-    defined_errors = []
-    send_mail_errors(defined_errors)
-else:
-    send_mail_errors(defined_errors)
 
-
+print(defined_errors)
 
 
 
