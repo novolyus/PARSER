@@ -127,14 +127,7 @@ def send_mail_errors(multierror):
              '''
          create_template(multierror,'template_errors.html')
          msg.attach(MIMEText(message, 'plain')) 
-                       
-    msg = MIMEMultipart()          
-    msg['From'] = "NST-Jenkins@DPKO.UN.ORG"
-    msg['To'] = ", ".join(recipients)
-    msg['Subject'] = "#AUTO|MAIN UPLINKS Preventive Maintenance routine to check all DC uplinks -  Report"
-    smtpServer = 'onesmtp.un.org'
-    msg.attach(MIMEText(message, 'plain'))
-    
+
     filename = 'template.html'
     filename_errors = 'template_errors.html'
     part = MIMEBase('application', "octet-stream")
